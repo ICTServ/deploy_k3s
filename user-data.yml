@@ -1,0 +1,43 @@
+#cloud-config
+manage_etc_hosts: true
+user: $CLUSTER_USERNAME
+password: $CLUSTER_PASSWORD
+chpasswd:
+  expire: False
+users:
+  - name: $CLUSTER_USERNAME
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - $CLUSTER_PUBKEY
+package_upgrade: true
+packages:
+  - bmon 
+  - bwm-ng 
+  - curl 
+  - htop 
+  - iftop 
+  - iotop 
+  - libpam-systemd 
+  - locales-all 
+  - locate 
+  - nano 
+  - net-tools 
+  - ntpdate 
+  - nfs-common 
+  - qemu-guest-agent 
+  - rsync 
+  - screen 
+  - strace 
+  - sysstat 
+  - snmpd 
+  - sudo 
+  - tcpdump 
+  - tmux 
+  - vlan 
+  - vnstat
+runcmd:
+  - apt purge snapd -y
+  - apt autoremove -y
+  - apt autoclean -y
+  - hostnamectl set-hostname k3s-`ip -o addr show dev "eth0" | awk '$3 == "inet" {print $4}' | sed -r 's!/.*!!; s!.*\.!!'`
+  
