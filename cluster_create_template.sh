@@ -8,9 +8,6 @@ export TEMPLATE_EXISTS=$(qm list | grep -v grep | grep -ci 9000)
 if [[ $TEMPLATE_EXISTS > 0 && $CREATE_TEMPLATE > 0 ]]
 then
   echo "clearing template"
-  # destroy linked management vm 
-  ./cluster_destroy_loadbalancer.sh
-
   # destroy any linked cluster nodes
   ./cluster_destroy_nodes.sh
   
@@ -43,7 +40,6 @@ qm set 9000 --boot c --bootdisk scsi0
 qm set 9000 --serial0 socket --vga serial0
 qm set 9000 --ipconfig0 ip=dhcp
 
-#qm cloudinit dump 9000 user > /var/lib/vz/snippets/user-data.yml; nano /var/lib/vz/snippets/user-data.yml
 qm set 9000 --cicustom "user=local:snippets/user-data.yml" 
 
 echo "starting template vm..."
@@ -64,4 +60,3 @@ qm stop 9000
 echo "creating template image"
 qm template 9000
  
-#systemctl status cloud-final.service

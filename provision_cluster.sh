@@ -21,3 +21,5 @@ cat user-data.yml | envsubst > /var/lib/vz/snippets/user-data.yml
 echo "creating template"
 # provision proxmox template
 ./cluster_create_template.sh
+#provision worker nodes
+./cluster_create_vms_worker.sh
