@@ -41,6 +41,7 @@ qm set 9000 --scsihw virtio-scsi-pci --scsi0 $CLUSTER_STORAGE:9000/vm-9000-disk-
 qm set 9000 --ide2 $CLUSTER_STORAGE:cloudinit
 qm set 9000 --boot c --bootdisk scsi0
 qm set 9000 --serial0 socket --vga serial0
+qm set 9000 --ipconfig0 ip=dhcp
 
 #qm cloudinit dump 9000 user > /var/lib/vz/snippets/user-data.yml; nano /var/lib/vz/snippets/user-data.yml
 qm set 9000 --cicustom "user=local:snippets/user-data.yml" 
@@ -60,7 +61,7 @@ echo "initial setup complete..."
 qm shutdown 9000
 qm stop 9000
 
-#echo "creating template image"systemctl status cloud-final.service
+echo "creating template image"
 qm template 9000
  
- systemctl status cloud-final.service
+#systemctl status cloud-final.service
