@@ -20,22 +20,24 @@ do
     echo "creating $k3s-${clusterIds[$i]} : ${clusterAddrs[$i]}"
     # clone images for master nodes
     qm clone 9000 ${clusterIds[$i]}  --name k3s-${clusterIds[$i]} 
-    qm set ${clusterIds[$i]}  --onboot 0 --cores 2 --cicustom "user=local:snippets/user-data.yml" --memory 4096 --ipconfig0 ip=${clusterAddrs[$i]}/24,gw=$CLUSTER_GW_IP
+    qm set ${clusterIds[$i]}  --onboot 0 --cicustom "user=local:snippets/user-data.yml" --memory 4096 --ipconfig0 ip=${clusterAddrs[$i]}/24,gw=$CLUSTER_GW_IP
 
     qm resize ${clusterIds[$i]}  scsi0 96G
     qm start ${clusterIds[$i]} 
 done
 
 echo "waiting for nodes to spin up..."
-secs=25
+secs=240
 while [ $secs -gt 0 ]; do
    echo -ne "\t$secs seconds remaining\033[0K\r"
    sleep 1
    : $((secs--))
 done
 
-#Save the VM
+echo "Save VM keys to known hosts"
 for IP in "${clusterAddrs[@]}"
 do
-  ssh-keyscan -H $IP >> ~/.ssh/known_hosts > /dev/null 2>&1
+  echo "scraping ssh keys $IP"
+  ssh-keyscan -H $IP  2> /dev/null >>example_hosts
+  ssh-keyscan -H $IP 2> /dev/null >> ~/.ssh/known_hosts 
 done

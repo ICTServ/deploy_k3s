@@ -21,5 +21,19 @@ cat user-data.yml | envsubst > /var/lib/vz/snippets/user-data.yml
 echo "creating template"
 # provision proxmox template
 ./cluster_create_template.sh
-#provision worker nodes
+
 ./cluster_create_vms_worker.sh
+#echo "Running init script remotely"
+#
+#scp .env $CLUSTER_USERNAME@$CLUSTER_IP_1:/home/$CLUSTER_USERNAME/temp/.
+#scp *.sh $CLUSTER_USERNAME@$CLUSTER_IP_1:/home/$CLUSTER_USERNAME/temp/.
+#scp *.yml $CLUSTER_USERNAME@$CLUSTER_IP_1:/home/$CLUSTER_USERNAME/temp/.
+#
+#
+#ssh $CLUSTER_USERNAME@$CLUSTER_IP_1 "bash -s" <<EOF
+#ls
+#cd temp
+#echo "Running init script remotely"
+#source .env
+
+#EOF
