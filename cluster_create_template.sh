@@ -25,14 +25,14 @@ then
 fi
 
 #fetch cloud-init image
-wget -nc https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+wget -nc https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
 
 echo "Cluster storage: $CLUSTER_STORAGE"
 
 # create a new VM
 qm create 9000 --name k3s-template --memory 4096 --cores 4 --net0 virtio,bridge=vmbr0 
 # import the downloaded disk to local storage
-qm importdisk 9000 focal-server-cloudimg-amd64.img $CLUSTER_STORAGE 1>/dev/null 
+qm importdisk 9000 jammy-server-cloudimg-amd64.img $CLUSTER_STORAGE 1>/dev/null 
 # finally attach the new disk to the VM as scsi drive
 qm set 9000 --scsihw virtio-scsi-pci --scsi0 $CLUSTER_STORAGE:9000/vm-9000-disk-0.raw
 qm set 9000 --ide2 $CLUSTER_STORAGE:cloudinit
